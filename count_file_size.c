@@ -9,13 +9,12 @@ int main( int argc, char * argv [] )
     long begin = ftell(f);
     printf("Poczatkowa pozycja w pliku: %d\n", begin);
     
-    fseek(f, 0, 2);   // dziesiąta pozycja od końca
+    fseek(f, 0, SEEK_END);   // dziesiąta pozycja od końca
 
     long offset = ftell(f);
     printf("Pozycja koncowa w pliku: %d\n", offset);
     printf("Roznica pozycji w pliku: %d\n", offset - begin );
 
     fclose(f);
-    return 0;
     return 0;
 }

@@ -23,7 +23,14 @@
                                 fprintf( stdout, "CONDITION_SATISFIED     : ( %i )[ %s ]{ %s } " #x " \n", __LINE__, __FILE__, __FUNCTION__ ); \
                             }
 
-#define PRINT_MSG( x )          fprintf( stdout, "MSG                     : ( %i )[ %s ]{ %s } " #x " \n", __LINE__, __FILE__, __FUNCTION__ );
+#define PRINT_MSG( x )          fprintf( stdout, "MSG                     : "); \
+                                fprintf( stdout, "( %i )", __LINE__ );          \
+                                fprintf( stdout, "[ %s ]", __FILE__ );          \
+                                fprintf( stdout, "{ %s }", __FUNCTION__ );      \
+                                fprintf( stdout, #x " \n" );                    \
+
+
+
 
 int main()
 {
