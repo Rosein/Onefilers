@@ -2,8 +2,10 @@
 #include <utility>
 #include <vector>
 
-constexpr size_t HEIGHT = 3;
-constexpr size_t WIDTH = 10;
+// constexpr size_t HEIGHT = 3;
+constexpr size_t HEIGHT = 32;
+// constexpr size_t WIDTH = 10;
+constexpr size_t WIDTH = 32;
 
 using Compr = std::vector<std::pair<uint8_t, uint8_t>>;
 using Decompr = std::array<std::array<uint8_t, WIDTH>, HEIGHT>;
