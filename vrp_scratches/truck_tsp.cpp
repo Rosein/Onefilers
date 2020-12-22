@@ -1,19 +1,38 @@
-#include <iostream>
-#include <vector>
-#include <random>
-#include <utility>
+#include "truck_tsp.hpp"
 
-#define NUMBER_OF_NEIGHBORS 5
-
-using Route = std::vector<int>;
-
-void display(Route vector){
-    for (int i = 0; i < vector.size(); i++){
-        std::cout << vector[i] << " ";
-    }
-    std::cout << std::endl;
+double distance_between_cities(Coordinate first_city, Coordinate second_city){
+    return sqrt(pow(first_city.length - second_city.length, 2) + pow(first_city.width- second_city.width, 2));
 }
 
+bool is_near_enough_to(double supect, double center, double measurement_error ){
+    return supect >= center - measurement_error && supect <= center + measurement_error;
+}
+
+Matrix make_real_distance_matrix(){
+    
+    Matrix distance_matrix( cities.size(), std::vector<double>( cities.size(), 0 ) );
+
+    for( int i = 0; i < cities.size(); i++ )
+        for( int j = 0; j < cities.size(); j++ )
+            distance_matrix[ i ][ j ] = geo_degree_in_km * distance_between_cities( cities[ i ], cities[ j ] );
+
+    return distance_matrix;
+}
+
+void display(Route route){
+    const int word_width = 15;
+    for (int i = 0; i < route.size(); i++){
+        std::cout << std::setw( word_width ) << name_of_cities[ route[ i ] ] << " ";
+    }
+
+    std::cout << ": Whole distance is " << fitness(route) << std::endl;
+
+    for (int i = 0; i < route.size(); i++){
+        std::cout << std::setw( word_width ) << route[i] << " ";
+    }
+    std::cout << std::endl;
+
+}
 
 // generator dwoch miast do wymiany na ścieżce
 std::pair<int,int> generate_cities_to_swap(Route route){
@@ -75,32 +94,27 @@ std::vector<Route> getNeighbors(Route route) {
     return neighbors;
 }
 
-std::vector<int> route {5,4,3,2,10};
+double fitness(std::vector<int> route){
+    double route_length;
+    static Matrix distance_matrix = make_real_distance_matrix();
 
-// double fitness(std::vector<int> route){
-//     double route_length;
+    for (int i = 0; i < route.size() - 1; i++)
+        route_length += distance_matrix[ route[i] ][ route[i + 1]];
 
-//     for (int i=0; i < route.size() - 1; i++){
-//         route_length += distance_matrix[ route[i] ][ route[i + 1]];
-//     }
-//     std::cout << route_length << std::endl;
-// }
+    return route_length;
+}
 
 int main(){
+
     srand( time(NULL) );
-    // fitness(route);
     createNeighbor(route);
-   
     std::vector<Route> neighbors = getNeighbors(route);
- 
+
     std::cout << "First route\n";
     display(route);
 
-    //Route new_route = createNeighbor(route);
-   // display(new_route);
-
     std::cout << "Neighbors \n";
-    for(int i =0; i< NUMBER_OF_NEIGHBORS; i ++){
+    for(int i =0; i< neighbors.size(); i ++){
         display(neighbors[i]);
     }
 }
