@@ -94,8 +94,8 @@ std::vector<Route> getNeighbors(Route route) {
     return neighbors;
 }
 
-double fitness(std::vector<int> route){
-    double route_length;
+double fitness(Route route){
+    double route_length = 0;
     static Matrix distance_matrix = make_real_distance_matrix();
 
     for (int i = 0; i < route.size() - 1; i++)
@@ -104,18 +104,80 @@ double fitness(std::vector<int> route){
     return route_length;
 }
 
+bool is_in_tabu_list(Route route){
+
+    for(int i=0; i < tabu_list.size(); i++){
+        if(are_route_equal(tabu_list[i], route)){
+            return true; 
+        }
+    }
+    return false;
+}
+
+
+Route find_best_candidate(std::vector<Route> neighbors){
+
+    Route best_candidate = neighbors[0];
+
+    for (int i = 0; i < neighbors.size(); i++){
+        if(!is_in_tabu_list(neighbors[i]) && fitness(neighbors[i]) <= fitness(best_candidate)){
+            best_candidate = neighbors[i];
+        }
+        display(best_candidate);
+    }    
+    //std::cout << "aaa" << std::endl;
+    return best_candidate;
+
+}
+
+void find_best_candidate_test (){
+    tabu_list = {{1, 0, 3}};
+    Route expected_best_candidate = {0, 3, 1};
+    std::vector<Route> neighbors = {{0, 3, 1}, 
+                                    {1, 0, 3},
+                                    {3, 1, 0}};
+    
+    assert(find_best_candidate(neighbors) == expected_best_candidate);
+}
+
+    // tabuList.removeFirst()
+void remove_first_route_from_tabu_list(){
+    std::reverse(std::begin(tabu_list), std::end(tabu_list));
+
+    tabu_list.pop_back();
+
+    std::reverse(std::begin(tabu_list), std::end(tabu_list));
+
+}
+
+void remove_first_route_from_tabu_list_test(){
+     tabu_list = {{1, 0, 3},{3, 1, 0}};
+     Route tabu_sec_el = tabu_list[1];
+     
+     remove_first_route_from_tabu_list();
+     assert(are_route_equal(tabu_list[0], tabu_sec_el));
+}
+
+// Route tsp_tabu_search(){
+//     Route the_best_route {};
+
+// }
+
 int main(){
 
-    srand( time(NULL) );
-    createNeighbor(route);
-    std::vector<Route> neighbors = getNeighbors(route);
+    // srand( time(NULL) );
+    // createNeighbor(route);
+    // std::vector<Route> neighbors = getNeighbors(route);
 
-    std::cout << "First route\n";
-    display(route);
+    // std::cout << "First route\n";
+    // display(route);
 
-    std::cout << "Neighbors \n";
-    for(int i =0; i< neighbors.size(); i ++){
-        display(neighbors[i]);
-    }
+    // std::cout << "Neighbors \n";
+    // for(int i =0; i< neighbors.size(); i ++){
+    //     display(neighbors[i]);
+    // }
+
+    find_best_candidate_test();
+    
 }
 

@@ -6,11 +6,15 @@
 #include <random>
 #include <utility>
 #include <iomanip>
+#include <cassert>
+#include <algorithm>
 
 #define NUMBER_OF_NEIGHBORS 5
 
 using Route = std::vector<int>;
 using Matrix = std::vector<std::vector<double>>;
+using Tabu = std::vector<Route>;
+
 
 const double geo_degree_in_km = 111.1; 
 
@@ -19,6 +23,8 @@ struct Coordinate{
     double width;
     double length;
 };
+
+Tabu tabu_list {};
 
 std::vector<std::string> name_of_cities { "Krakow", "Bialystok", "Bie-Biala", "Chrzanow", "Gdansk", "Gdynia", "Gliwice", "Gromnik", "Katowice", "Kielce", "Krosno", "Krynica", "Lublin", "Lodz", "Malbork", "Nowy Targ", "Olsztyn", "Poznan", "Pulawy", "Radom", "Rzeszow", "Sandomierz", "Szczecin", "Szczucin", "Szk Poreba", "Tarnow", "Warszawa", "Wieliczka", "Wroclaw", "Zakopane", "Zamosc" };
 std::vector<Coordinate> cities = {
